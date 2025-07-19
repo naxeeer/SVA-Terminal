@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Verification Assistant (SVA) Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2>Student Verification Assistant</h2>
+            <div class="loading-spinner"></div>
+            <p>Initializing system...</p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SVA Terminal</span>
+                </div>
+                <div class="header-info">
+                    <div class="exam-info" id="exam-info">
+                        <span class="exam-status">No Active Exam</span>
+                    </div>
+                    <div class="system-time" id="system-time"></div>
+                </div>
+                <div class="admin-access">
+                    <button id="admin-btn" class="admin-btn">
+                        <i class="fas fa-cog"></i>
+                        Admin
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Exam Verification Page -->
+            <div id="exam-page" class="page active">
+                <div class="verification-container">
+                    <div class="verification-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-user-check"></i> Student Verification</h2>
+                            <p>Please scan your face to begin verification</p>
+                        </div>
+                        
+                        <div class="verification-steps">
+                            <div class="step active" id="step-1">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h3>Face Scan</h3>
+                                    <div class="camera-container">
+                                        <div class="camera-placeholder">
+                                            <i class="fas fa-camera"></i>
+                                            <p>Position your face in the frame</p>
+                                            <button id="capture-face-btn" class="capture-btn">
+                                                <i class="fas fa-camera"></i>
+                                                Capture Face
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step" id="step-2">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h3>Student Information</h3>
+                                    <div class="student-info" id="student-info">
+                                        <div class="info-placeholder">
+                                            <i class="fas fa-user"></i>
+                                            <p>Student information will appear here</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step" id="step-3">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h3>Fingerprint Verification</h3>
+                                    <div class="fingerprint-container">
+                                        <div class="fingerprint-placeholder">
+                                            <i class="fas fa-fingerprint"></i>
+                                            <p>Place your finger on the scanner</p>
+                                            <button id="capture-fingerprint-btn" class="capture-btn" disabled>
+                                                <i class="fas fa-fingerprint"></i>
+                                                Scan Fingerprint
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="verification-result" id="verification-result">
+                            <!-- Results will be displayed here -->
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="reset-btn" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i>
+                                Start Over
+                            </button>
+                            <button id="next-student-btn" class="btn btn-primary" style="display: none;">
+                                <i class="fas fa-arrow-right"></i>
+                                Next Student
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Page -->
+            <div id="admin-page" class="page">
+                <div class="admin-container">
+                    <div class="admin-header">
+                        <h2><i class="fas fa-cog"></i> Administration Panel</h2>
+                        <button id="back-to-exam-btn" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Exam
+                        </button>
+                    </div>
+
+                    <div class="admin-tabs">
+                        <button class="tab-btn active" data-tab="students">
+                            <i class="fas fa-users"></i>
+                            Students
+                        </button>
+                        <button class="tab-btn" data-tab="courses">
+                            <i class="fas fa-book"></i>
+                            Courses
+                        </button>
+                        <button class="tab-btn" data-tab="exams">
+                            <i class="fas fa-clipboard-list"></i>
+                            Exams
+                        </button>
+                        <button class="tab-btn" data-tab="logs">
+                            <i class="fas fa-history"></i>
+                            Logs
+                        </button>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Students Tab -->
+                        <div id="students-tab" class="tab-content active">
+                            <div class="tab-header">
+                                <h3>Student Management</h3>
+                                <button id="add-student-btn" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Add Student
+                                </button>
+                            </div>
+                            <div class="data-table">
+                                <table id="students-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Student ID</th>
+                                            <th>Name</th>
+                                            <th>Class</th>
+                                            <th>Department</th>
+                                            <th>Faculty</th>
+                                            <th>Biometrics</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Student data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Courses Tab -->
+                        <div id="courses-tab" class="tab-content">
+                            <div class="tab-header">
+                                <h3>Course Management</h3>
+                                <button id="add-course-btn" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Add Course
+                                </button>
+                            </div>
+                            <div class="data-table">
+                                <table id="courses-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Course Code</th>
+                                            <th>Course Name</th>
+                                            <th>Description</th>
+                                            <th>Students Enrolled</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Course data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Exams Tab -->
+                        <div id="exams-tab" class="tab-content">
+                            <div class="tab-header">
+                                <h3>Exam Session Management</h3>
+                                <button id="add-exam-btn" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Create Exam Session
+                                </button>
+                            </div>
+                            <div class="data-table">
+                                <table id="exams-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Course</th>
+                                            <th>Exam Date</th>
+                                            <th>Duration</th>
+                                            <th>Location</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Exam data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Logs Tab -->
+                        <div id="logs-tab" class="tab-content">
+                            <div class="tab-header">
+                                <h3>Verification Logs</h3>
+                                <button id="refresh-logs-btn" class="btn btn-secondary">
+                                    <i class="fas fa-sync"></i>
+                                    Refresh
+                                </button>
+                            </div>
+                            <div class="data-table">
+                                <table id="logs-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Student</th>
+                                            <th>Course</th>
+                                            <th>Face</th>
+                                            <th>Fingerprint</th>
+                                            <th>Status</th>
+                                            <th>Error</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Log data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal" class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button id="modal-close" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
+
